@@ -11,6 +11,7 @@ import androidx.core.view.GravityCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.drawer_header.view.*
 import kotlinx.android.synthetic.main.fragment_calculator.*
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
@@ -29,17 +30,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         setupDrawerMenu()
 
         NavigationManager.goToCalculatorFragment(supportFragmentManager)
-//
-//        val historico = intent.getParcelableArrayListExtra<Operation>(EXTRA_NAME)
-//        historico?.let {
-//            historic = historico
-//        }
-//
-//        val configuration: Configuration = resources.configuration
-//        if(configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-//            list_historic.layoutManager = LinearLayoutManager(this)
-//            list_historic.adapter = HistoryAdapter(this, R.layout.item_expression, historic)
-//        }
     }
 
     override fun onDestroy() {
@@ -60,6 +50,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         when(item.itemId){
             R.id.nav_calculator -> NavigationManager.goToCalculatorFragment(supportFragmentManager)
             R.id.nav_history -> NavigationManager.goToHistoricFragment(supportFragmentManager)
+            R.id.nav_logout ->{
+                user = null
+                val intent = Intent(this, LoginActivity::class.java)
+                startActivity(intent)
+                finish()
+            }
         }
         drawer.closeDrawer(GravityCompat.START)
         return true;
@@ -68,6 +64,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private fun setupDrawerMenu() {
         val toggle = ActionBarDrawerToggle(this, drawer, toolbar, R.string.drawer_open, R.string.drawer_close)
         nav_drawer.setNavigationItemSelectedListener(this)
+        nav_drawer.getHeaderView(0).name.text = user?.username
+        nav_drawer.getHeaderView(0).email.text = user?.email
         drawer.addDrawerListener(toggle)
         toggle.syncState()
     }
