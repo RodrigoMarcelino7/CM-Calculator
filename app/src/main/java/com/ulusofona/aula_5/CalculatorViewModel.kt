@@ -6,18 +6,15 @@ class CalculatorViewModel : ViewModel() {
 
     private val calculatorLogic = CalculatorLogic()
     var display: String = "0"
-    var storage = ListStorage.getInstance()
     private var listener: OnDisplayChanged? = null
 
     private fun notifyOnDisplayChanged(){
         listener?.onDisplayChanged(display)
-        listener?.onStorageChanged(storage)
     }
 
     fun registerListener(listener: OnDisplayChanged){
         this.listener = listener
         listener.onDisplayChanged(display)
-        listener.onStorageChanged(storage)
     }
 
     fun unregisterListener(){

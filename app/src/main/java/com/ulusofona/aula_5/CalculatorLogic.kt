@@ -9,16 +9,14 @@ class CalculatorLogic {
 
     private val storage = ListStorage.getInstance()
 
-    fun insertSymbol(display: String, symbol: String) :String {
-        return if(display.isEmpty() && symbol == "0") symbol else display+symbol
+    fun insertSymbol(display: String, symbol: String): String {
+        return if (display.isEmpty() && symbol == "0") symbol else display + symbol
     }
 
-    fun performOperation(expression: String) :Double {
+    fun performOperation(expression: String): Double {
         val expressionBuilder = ExpressionBuilder(expression).build()
         val result = expressionBuilder.evaluate()
-        CoroutineScope(Dispatchers.IO).launch {
-            storage.insert(Operation(expression, result))
-        }
+        storage.insert(Operation(expression, result))
         return expressionBuilder.evaluate()
     }
 }

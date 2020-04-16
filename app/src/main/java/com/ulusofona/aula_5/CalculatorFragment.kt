@@ -17,20 +17,22 @@ import kotlinx.android.synthetic.main.fragment_calculator.list_historic
 import kotlinx.android.synthetic.main.fragment_calculator.view.*
 import kotlinx.android.synthetic.main.fragment_historic.*
 
-class CalculatorFragment : Fragment(), OnDisplayChanged {
-    private lateinit var viewModel: CalculatorViewModel
+class CalculatorFragment : Fragment(), OnDisplayChanged, OnHistoryChanged {
+    private lateinit var calculatorViewModel: CalculatorViewModel
+    private lateinit var historyViewModel: HistoryViewModel
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_calculator, container, false)
-        viewModel = ViewModelProviders.of(this).get(CalculatorViewModel::class.java)
-        viewModel.display.let { view.text_visor.text = it }
-        viewModel.storage.let {}
+        calculatorViewModel = ViewModelProviders.of(this).get(CalculatorViewModel::class.java)
+        historyViewModel = ViewModelProviders.of(this).get(HistoryViewModel::class.java)
+        calculatorViewModel.display.let { view.text_visor.text = it }
         ButterKnife.bind(this, view)
         return view
     }
 
     override fun onStart(){
-        viewModel.registerListener(this)
+        calculatorViewModel.registerListener(this)
+        historyViewModel.registerListener(this)
         super.onStart()
     }
 
@@ -46,26 +48,27 @@ class CalculatorFragment : Fragment(), OnDisplayChanged {
     }
 
     override fun onDestroy() {
-        viewModel.unregisterListener()
+        calculatorViewModel.unregisterListener()
         super.onDestroy()
     }
 
     @Optional
     @OnClick(R.id.button_Clear)
     fun onClickClear(){
-        viewModel.onClickClear()
+        calculatorViewModel.onClickClear()
     }
 
     @Optional
     @OnClick(R.id.button_BackSpace)
     fun onClickBackSpace(){
-        viewModel.onClickBackSpace()
+        calculatorViewModel.onClickBackSpace()
     }
 
     @Optional
     @OnClick(R.id.button_equals)
     fun onClickEquals(){
-        viewModel.onClickEquals().toString()
+        calculatorViewModel.onClickEquals().toString()
+        historyViewModel.onClickEquals()
     }
 
     @Optional
@@ -88,7 +91,7 @@ class CalculatorFragment : Fragment(), OnDisplayChanged {
         R.id.button_mult
     )
     fun onClickSymbol(view: View){
-        viewModel.onClickSymbol(view.tag.toString())
+        calculatorViewModel.onClickSymbol(view.tag.toString())
     }
 
     @Optional
