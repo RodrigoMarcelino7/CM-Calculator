@@ -1,60 +1,71 @@
 package com.ulusofona.aula_5
 
 import android.content.Context
-import android.content.res.Configuration
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.LinearLayoutManager
 import butterknife.ButterKnife
 import butterknife.OnClick
 import butterknife.Optional
-import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_calculator.*
-import net.objecthunter.exp4j.ExpressionBuilder
+import kotlinx.android.synthetic.main.fragment_calculator.list_historic
+import kotlinx.android.synthetic.main.fragment_calculator.view.*
+import kotlinx.android.synthetic.main.fragment_historic.*
 
-class CalculatorFragment : Fragment() {
-    private val TAG = MainActivity::class.java.simpleName
-
-    private var historic = arrayListOf(Operation("1+1","2"), Operation("2+3","5"))
+class CalculatorFragment : Fragment(), OnDisplayChanged {
+    private lateinit var viewModel: CalculatorViewModel
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_calculator, container, false)
+        viewModel = ViewModelProviders.of(this).get(CalculatorViewModel::class.java)
+        viewModel.display.let { view.text_visor.text = it }
+        viewModel.storage.let {}
         ButterKnife.bind(this, view)
         return view
     }
 
+    override fun onStart(){
+        viewModel.registerListener(this)
+        super.onStart()
+    }
+
+    override fun onDisplayChanged(value: String?) {
+        value?.let { text_visor.text = it }
+    }
+
+    override fun onStorageChanged(value: ListStorage?) {
+        value?.let {
+            list_historic?.layoutManager = LinearLayoutManager(activity as Context)
+            list_historic?.adapter = HistoryAdapter(activity as Context, R.layout.item_expression, it.getAll().toMutableList() as ArrayList<Operation>)
+        }
+    }
+
+    override fun onDestroy() {
+        viewModel.unregisterListener()
+        super.onDestroy()
+    }
+
     @Optional
     @OnClick(R.id.button_Clear)
-    fun onClickClear(view: View){
-        Log.i(TAG,"Click no botão c")
-        text_visor.text = "0"
+    fun onClickClear(){
+        viewModel.onClickClear()
     }
 
     @Optional
     @OnClick(R.id.button_BackSpace)
-    fun onClickBackSpace(view: View){
-        Log.i(TAG,"Click no botão <")
-        if(text_visor.text.length > 1)
-            text_visor.text = text_visor.text.substring(0,text_visor.length()-1)
-        else
-            text_visor.text = "0"
+    fun onClickBackSpace(){
+        viewModel.onClickBackSpace()
     }
 
     @Optional
     @OnClick(R.id.button_equals)
-    fun onClickEquals(view: View){
-        val configuration: Configuration = resources.configuration
-        Log.i(TAG,"Click no botão =")
-        val expression = ExpressionBuilder(text_visor.text.toString()).build()
-        historic.add(0,Operation(text_visor.text.toString(), expression.evaluate().toString()))
-        text_visor.text = expression.evaluate().toString()
-        if(configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            list_historic.adapter = HistoryAdapter(activity as Context, R.layout.item_expression, historic)
-        }
-        Log.i(TAG,"O resultado da expressão é ${text_visor.text}")
+    fun onClickEquals(){
+        viewModel.onClickEquals().toString()
     }
 
     @Optional
@@ -77,14 +88,7 @@ class CalculatorFragment : Fragment() {
         R.id.button_mult
     )
     fun onClickSymbol(view: View){
-        val symbol = view.tag.toString()
-        Log.i(TAG, "Click no botão $symbol")
-        if(text_visor.text.toString() == "0"){
-            text_visor.text = symbol
-        }
-        else{
-            text_visor.append(symbol)
-        }
+        viewModel.onClickSymbol(view.tag.toString())
     }
 
     @Optional

@@ -1,14 +1,12 @@
 package com.ulusofona.aula_5
 
 import android.content.Intent
-import android.content.res.Configuration
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.view.GravityCompat
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.drawer_header.view.*
@@ -17,8 +15,6 @@ import kotlinx.android.synthetic.main.fragment_calculator.*
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
     private val TAG = MainActivity::class.java.simpleName
     private val VISOR_KEY = "visor"
-
-    private var historic = arrayListOf(Operation("1+1","2"), Operation("2+3","5"))
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,7 +25,15 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         setSupportActionBar(toolbar)
         setupDrawerMenu()
 
+        if(!screenRotated(savedInstanceState)){
+            NavigationManager.goToCalculatorFragment(supportFragmentManager)
+        }
+
         NavigationManager.goToCalculatorFragment(supportFragmentManager)
+    }
+
+    private fun screenRotated(savedInstanceState: Bundle?): Boolean{
+        return savedInstanceState != null
     }
 
     override fun onDestroy() {
