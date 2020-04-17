@@ -1,29 +1,32 @@
 package com.ulusofona.aula_5
 
-import android.content.Context
 import androidx.lifecycle.ViewModel
-import androidx.recyclerview.widget.LinearLayoutManager
-import kotlinx.android.synthetic.main.fragment_calculator.*
 
 class HistoryViewModel : ViewModel() {
     var storage = ListStorage.getInstance()
+    private var calculatorLogic = CalculatorLogic()
 
     private var listener: OnHistoryChanged? = null
 
-    private fun notifyOnHistoryChanged(){
-        listener?.onStorageChanged(storage)
+    private fun notifyOnHistoryChanged() {
+        listener?.onStorageChanged()
     }
 
-    fun registerListener(listener: OnHistoryChanged){
+    fun registerListener(listener: OnHistoryChanged) {
         this.listener = listener
-        listener.onStorageChanged(storage)
+        listener.onStorageChanged()
     }
 
-    fun unregisterListener(){
+    fun unregisterListener() {
         listener = null
     }
 
-    fun onClickEquals(){
+    fun onClickEquals() {
+        notifyOnHistoryChanged()
+    }
+
+    fun onLongClick(item: Operation){
+        calculatorLogic.onLongClick(item)
         notifyOnHistoryChanged()
     }
 }

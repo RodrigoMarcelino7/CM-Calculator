@@ -25,6 +25,10 @@ class ListStorage private constructor() {
         }
     }
 
+    fun delete(o : Operation){
+        storage.remove(o)
+    }
+
     fun getAll(): List<Operation> {
         return storage.toList()
     }

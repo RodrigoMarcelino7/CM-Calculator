@@ -4,6 +4,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import net.objecthunter.exp4j.ExpressionBuilder
+import java.text.FieldPosition
 
 class CalculatorLogic {
 
@@ -18,5 +19,10 @@ class CalculatorLogic {
         val result = expressionBuilder.evaluate()
         storage.insert(Operation(expression, result))
         return expressionBuilder.evaluate()
+    }
+
+    fun onLongClick(item: Operation): Boolean{
+        storage.delete(item)
+        return true
     }
 }
