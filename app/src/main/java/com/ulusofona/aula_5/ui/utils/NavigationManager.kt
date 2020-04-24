@@ -1,7 +1,10 @@
-package com.ulusofona.aula_5
+package com.ulusofona.aula_5.ui.utils
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import com.ulusofona.aula_5.R
+import com.ulusofona.aula_5.ui.fragments.CalculatorFragment
+import com.ulusofona.aula_5.ui.fragments.HistoricFragment
 
 abstract class NavigationManager {
 
@@ -15,11 +18,17 @@ abstract class NavigationManager {
         }
 
         fun goToCalculatorFragment(fm: FragmentManager){
-            placeFragment(fm, CalculatorFragment())
+            placeFragment(
+                fm,
+                CalculatorFragment()
+            )
         }
 
         fun goToHistoricFragment(fm: FragmentManager){
-            placeFragment(fm, HistoricFragment())
+            placeFragment(
+                fm,
+                HistoricFragment()
+            )
         }
 
     }

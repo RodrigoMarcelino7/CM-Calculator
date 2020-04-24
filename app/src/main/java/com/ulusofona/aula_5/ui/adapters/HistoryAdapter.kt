@@ -1,4 +1,4 @@
-package com.ulusofona.aula_5
+package com.ulusofona.aula_5.ui.adapters
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -7,6 +7,9 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.ulusofona.aula_5.ui.listeners.ItemLongClickListener
+import com.ulusofona.aula_5.data.local.entities.Operation
+import com.ulusofona.aula_5.R
 import kotlinx.android.synthetic.main.item_expression.view.*
 
 class HistoryAdapter(
@@ -33,7 +36,9 @@ class HistoryAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HistoryViewHolder {
-        return HistoryViewHolder(LayoutInflater.from(context).inflate(layout, parent, false))
+        return HistoryViewHolder(
+            LayoutInflater.from(context).inflate(layout, parent, false)
+        )
     }
 
     override fun onBindViewHolder(holder: HistoryViewHolder, position: Int) {

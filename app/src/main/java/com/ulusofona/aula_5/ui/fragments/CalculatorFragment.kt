@@ -1,8 +1,7 @@
-package com.ulusofona.aula_5
+package com.ulusofona.aula_5.ui.fragments
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -12,12 +11,23 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import butterknife.ButterKnife
 import butterknife.OnClick
 import butterknife.Optional
+import com.ulusofona.aula_5.*
+import com.ulusofona.aula_5.data.local.entities.Operation
+import com.ulusofona.aula_5.ui.adapters.HistoryAdapter
+import com.ulusofona.aula_5.ui.listeners.ItemLongClickListener
+import com.ulusofona.aula_5.ui.listeners.OnDisplayChanged
+import com.ulusofona.aula_5.ui.listeners.OnHistoryChanged
+import com.ulusofona.aula_5.ui.utils.NavigationManager
+import com.ulusofona.aula_5.ui.viewmodels.CalculatorViewModel
+import com.ulusofona.aula_5.ui.viewmodels.HistoryViewModel
 import kotlinx.android.synthetic.main.fragment_calculator.*
 import kotlinx.android.synthetic.main.fragment_calculator.list_historic
 import kotlinx.android.synthetic.main.fragment_calculator.view.*
-import kotlinx.android.synthetic.main.fragment_historic.*
 
-class CalculatorFragment : Fragment(), OnDisplayChanged, OnHistoryChanged, ItemLongClickListener {
+class CalculatorFragment : Fragment(),
+    OnDisplayChanged,
+    OnHistoryChanged,
+    ItemLongClickListener {
     private lateinit var calculatorViewModel: CalculatorViewModel
     private lateinit var historyViewModel: HistoryViewModel
 
@@ -44,14 +54,16 @@ class CalculatorFragment : Fragment(), OnDisplayChanged, OnHistoryChanged, ItemL
         value?.let { text_visor.text = it }
     }
 
-    override fun onStorageChanged() {
-        list_historic?.layoutManager = LinearLayoutManager(activity as Context)
-        list_historic?.adapter = HistoryAdapter(
-            activity as Context,
-            R.layout.item_expression,
-            historyViewModel.storage.getAll().toMutableList() as ArrayList<Operation>,
-            this
-        )
+    override fun onStorageChanged(value: List<Operation>?) {
+        value?.let {
+            list_historic?.layoutManager = LinearLayoutManager(activity as Context)
+            list_historic?.adapter = HistoryAdapter(
+                activity as Context,
+                R.layout.item_expression,
+                it.toMutableList() as ArrayList<Operation>,
+                this
+            )
+        }
     }
 
     override fun onDestroy() {
@@ -71,8 +83,7 @@ class CalculatorFragment : Fragment(), OnDisplayChanged, OnHistoryChanged, ItemL
 
     @OnClick(R.id.button_equals)
     fun onClickEquals() {
-        calculatorViewModel.onClickEquals().toString()
-        historyViewModel.onClickEquals()
+        calculatorViewModel.onClickEquals()
     }
 
     @Optional
@@ -101,8 +112,12 @@ class CalculatorFragment : Fragment(), OnDisplayChanged, OnHistoryChanged, ItemL
     @Optional
     @OnClick(R.id.nav_history)
     fun onClickHistory(view: View) {
-        NavigationManager.goToHistoricFragment(requireFragmentManager())
+        NavigationManager.goToHistoricFragment(
+            requireFragmentManager()
+        )
     }
 
-    override fun onLongClick(item: Operation): Boolean {return true}
+    override fun onLongClick(item: Operation): Boolean {
+        return true
+    }
 }

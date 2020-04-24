@@ -1,11 +1,12 @@
-package com.ulusofona.aula_5
+package com.ulusofona.aula_5.ui.activities
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import butterknife.OnClick
-import kotlinx.android.synthetic.main.activity_login.*
+import com.ulusofona.aula_5.R
+import com.ulusofona.aula_5.data.local.User
 import kotlinx.android.synthetic.main.activity_register.*
 import kotlinx.android.synthetic.main.activity_register.password
 import kotlinx.android.synthetic.main.activity_register.username
@@ -21,7 +22,12 @@ class RegisterActivity : AppCompatActivity() {
     @OnClick(R.id.button_register)
     fun onClickConfirm(view: View){
         if(users[username.text.toString()] == null && password.text.toString() == password_confirm.text.toString()){
-            users[username.text.toString()] = User(username.text.toString(), DigestUtils.sha256Hex(password.text.toString()), email.text.toString())
+            users[username.text.toString()] =
+                User(
+                    username.text.toString(),
+                    DigestUtils.sha256Hex(password.text.toString()),
+                    email.text.toString()
+                )
             user = users[username.text.toString()]
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)

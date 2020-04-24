@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:weightSum="8"
     android:orientation="vertical"
-    tools:context=".HistoricFragment">
+    tools:context=".ui.fragments.HistoricFragment">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/list_historic"

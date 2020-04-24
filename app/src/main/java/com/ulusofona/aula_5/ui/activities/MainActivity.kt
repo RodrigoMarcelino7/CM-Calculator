@@ -1,4 +1,4 @@
-package com.ulusofona.aula_5
+package com.ulusofona.aula_5.ui.activities
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -8,6 +8,8 @@ import android.view.MenuItem
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.view.GravityCompat
 import com.google.android.material.navigation.NavigationView
+import com.ulusofona.aula_5.ui.utils.NavigationManager
+import com.ulusofona.aula_5.R
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.drawer_header.view.*
 import kotlinx.android.synthetic.main.fragment_calculator.*
@@ -26,10 +28,14 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         setupDrawerMenu()
 
         if(!screenRotated(savedInstanceState)){
-            NavigationManager.goToCalculatorFragment(supportFragmentManager)
+            NavigationManager.goToCalculatorFragment(
+                supportFragmentManager
+            )
         }
 
-        NavigationManager.goToCalculatorFragment(supportFragmentManager)
+        NavigationManager.goToCalculatorFragment(
+            supportFragmentManager
+        )
     }
 
     private fun screenRotated(savedInstanceState: Bundle?): Boolean{
@@ -52,8 +58,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when(item.itemId){
-            R.id.nav_calculator -> NavigationManager.goToCalculatorFragment(supportFragmentManager)
-            R.id.nav_history -> NavigationManager.goToHistoricFragment(supportFragmentManager)
+            R.id.nav_calculator -> NavigationManager.goToCalculatorFragment(
+                supportFragmentManager
+            )
+            R.id.nav_history -> NavigationManager.goToHistoricFragment(
+                supportFragmentManager
+            )
             R.id.nav_logout ->{
                 user = null
                 val intent = Intent(this, LoginActivity::class.java)
@@ -66,7 +76,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     private fun setupDrawerMenu() {
-        val toggle = ActionBarDrawerToggle(this, drawer, toolbar, R.string.drawer_open, R.string.drawer_close)
+        val toggle = ActionBarDrawerToggle(this, drawer, toolbar,
+            R.string.drawer_open,
+            R.string.drawer_close
+        )
         nav_drawer.setNavigationItemSelectedListener(this)
         nav_drawer.getHeaderView(0).name.text = user?.username
         nav_drawer.getHeaderView(0).email.text = user?.email

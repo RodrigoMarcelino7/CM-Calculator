@@ -1,22 +1,29 @@
-package com.ulusofona.aula_5
+package com.ulusofona.aula_5.ui.activities
 
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import butterknife.OnClick
+import com.ulusofona.aula_5.R
+import com.ulusofona.aula_5.data.local.User
 import kotlinx.android.synthetic.main.activity_login.*
 import org.apache.commons.codec.digest.DigestUtils
 
 var users = hashMapOf<String, User>()
-var user :User? = null
+var user : User? = null
 
 class LoginActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
-        users["admin"] = User("admin", DigestUtils.sha256Hex("admin") , "admin@admin.pt")
+        users["admin"] =
+            User(
+                "admin",
+                DigestUtils.sha256Hex("admin"),
+                "admin@admin.pt"
+            )
     }
 
     @OnClick(R.id.button_login)
