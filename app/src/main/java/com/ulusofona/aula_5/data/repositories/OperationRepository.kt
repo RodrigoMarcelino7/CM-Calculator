@@ -37,7 +37,6 @@ class OperationRepository(private val local: OperationDao, private val remote: R
                         notOnCloud=local.getOnDB()
                         val service = remote.create(OperationService::class.java)
                         for(op in notOnCloud!!){
-                            Log.i("ME DEIXA FUGIR", "ME DEIXA FUGIR")
                             if (!op.onWS){
                                 val response = user?.token?.let { service.postOperation(it, op) }
                                 if (response != null) {
@@ -95,7 +94,7 @@ class OperationRepository(private val local: OperationDao, private val remote: R
     fun updateScreen(historic: List<Operation>?) {
         CoroutineScope(Dispatchers.Main).launch {
             listener?.onStorageChanged(historic)
-            Log.i("Atualizei a lista", "done")
+            Log.i("Lista aztualizada", "Check")
         }
     }
 
