@@ -38,15 +38,13 @@ class CalculatorFragment : Fragment(),
     ): View? {
         val view = inflater.inflate(R.layout.fragment_calculator, container, false)
         calculatorViewModel = ViewModelProviders.of(this).get(CalculatorViewModel::class.java)
-        historyViewModel = ViewModelProviders.of(this).get(HistoryViewModel::class.java)
         calculatorViewModel.display.let { view.text_visor.text = it }
         ButterKnife.bind(this, view)
         return view
     }
 
     override fun onStart() {
-        calculatorViewModel.registerListener(this)
-        historyViewModel.registerListener(this)
+        context?.let { calculatorViewModel.registerListener(this, this, it) }
         super.onStart()
     }
 
@@ -83,7 +81,7 @@ class CalculatorFragment : Fragment(),
 
     @OnClick(R.id.button_equals)
     fun onClickEquals() {
-        calculatorViewModel.onClickEquals()
+        context?.let { calculatorViewModel.onClickEquals(it) }
     }
 
     @Optional
@@ -111,13 +109,13 @@ class CalculatorFragment : Fragment(),
 
     @Optional
     @OnClick(R.id.nav_history)
-    fun onClickHistory(view: View) {
+    fun onClickHistory() {
         NavigationManager.goToHistoricFragment(
             requireFragmentManager()
         )
     }
 
-    override fun onLongClick(item: Operation): Boolean {
+    override fun onLongClick(): Boolean {
         return true
     }
 }

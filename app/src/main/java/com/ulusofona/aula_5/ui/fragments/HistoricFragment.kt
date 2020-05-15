@@ -1,6 +1,8 @@
 package com.ulusofona.aula_5.ui.fragments
 
 import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkInfo
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -34,6 +36,16 @@ class HistoricFragment : Fragment(), OnHistoryChanged, ItemLongClickListener {
         return view
     }
 
+    override fun onStart() {
+        context?.let { historyViewModel.registerListener(this, it) }
+        super.onStart()
+    }
+
+    override fun onDestroy() {
+        historyViewModel.unregisterListener()
+        super.onDestroy()
+    }
+
     override fun onStorageChanged(value: List<Operation>?) {
         value?.let {
             list_historic?.layoutManager = LinearLayoutManager(activity as Context)
@@ -46,26 +58,15 @@ class HistoricFragment : Fragment(), OnHistoryChanged, ItemLongClickListener {
         }
     }
 
-    override fun onLongClick(item: Operation): Boolean {
-        historyViewModel.onLongClick(item)
+    override fun onLongClick(): Boolean {
+        context?.let { historyViewModel.onLongClick(it) }
         return true
     }
 
     @OnClick(R.id.button_back)
-    fun onClickBack(view: View) {
+    fun onClickBack() {
         NavigationManager.goToCalculatorFragment(
             requireFragmentManager()
         )
     }
-
-    override fun onStart() {
-        historyViewModel.registerListener(this)
-        super.onStart()
-    }
-
-    override fun onDestroy() {
-        historyViewModel.unregisterListener()
-        super.onDestroy()
-    }
-
 }

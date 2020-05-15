@@ -1,56 +1,45 @@
 package com.ulusofona.aula_5.domain.calculator
 
-import com.ulusofona.aula_5.data.local.list.ListStorage
+import android.content.Context
 import com.ulusofona.aula_5.data.local.entities.Operation
+import com.ulusofona.aula_5.data.repositories.OperationRepository
 import com.ulusofona.aula_5.ui.listeners.OnHistoryChanged
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import net.objecthunter.exp4j.ExpressionBuilder
 
-class CalculatorLogic(private val storage: ListStorage) : OnHistoryChanged {
+class CalculatorLogic(private val repository: OperationRepository) : OnHistoryChanged{
 
     fun insertSymbol(display: String, symbol: String): String {
         return if (display.isEmpty() && symbol == "0") symbol else display + symbol
     }
 
-    fun performOperation(expression: String): Double {
+    fun performOperation(expression: String, context: Context): Double {
         val expressionBuilder = ExpressionBuilder(expression).build()
         val result = expressionBuilder.evaluate()
-        CoroutineScope(Dispatchers.IO).launch {
-            storage.insert(
-                Operation(
-                    expression,
-                    result
-                )
-            )
-        }
+        repository.performOperation(Operation(expression,result, false), context)
         return result
     }
 
-    fun getAll(): List<Operation>? {
-        var historic: List<Operation>? = null
-        CoroutineScope(Dispatchers.IO).launch {
-            historic = storage.getAll()
-        }
-        return historic
+    fun getAll(context: Context) : List<Operation>? {
+        return repository.getAll(context)
     }
 
-    fun onLongClick(item: Operation) {
+    fun onLongClick(context: Context) {
         CoroutineScope(Dispatchers.IO).launch {
-            storage.delete(item)
+            //repository.deleteOperation(context)
         }
     }
 
     override fun onStorageChanged(value: List<Operation>?) {
-        storage.onStorageChanged(value)
+        repository.onStorageChanged(value)
     }
 
-    fun registerListener(listener: OnHistoryChanged) {
-        storage.registerListener(listener)
+    fun registerListener(listener: OnHistoryChanged, context: Context) {
+        repository.registerListener(listener, context)
     }
-
     fun unregisterListener() {
-        storage.unregisterListener()
+        repository.unregisterListener()
     }
 }

@@ -30,7 +30,7 @@ class HistoryAdapter(
             result.text =item.result.toString()
             image.setImageResource(R.drawable.logo)
             itemView.setOnLongClickListener{
-                listener.onLongClick(item)
+                listener.onLongClick()
             }
         }
     }

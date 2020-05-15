@@ -7,9 +7,14 @@ import android.util.Log
 import android.view.MenuItem
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.view.GravityCompat
+import androidx.lifecycle.ViewModelProviders
 import com.google.android.material.navigation.NavigationView
 import com.ulusofona.aula_5.ui.utils.NavigationManager
 import com.ulusofona.aula_5.R
+import com.ulusofona.aula_5.data.remote.requests.Login
+import com.ulusofona.aula_5.ui.listeners.OnLoginUser
+import com.ulusofona.aula_5.ui.viewmodels.CalculatorViewModel
+import com.ulusofona.aula_5.ui.viewmodels.LoginViewModel
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.drawer_header.view.*
 import kotlinx.android.synthetic.main.fragment_calculator.*
@@ -17,10 +22,13 @@ import kotlinx.android.synthetic.main.fragment_calculator.*
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
     private val TAG = MainActivity::class.java.simpleName
     private val VISOR_KEY = "visor"
+    private lateinit var loginViewModel: LoginViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        loginViewModel = ViewModelProviders.of(this).get(LoginViewModel::class.java)
 
         Log.i(TAG,"O metodo onCreate foi invocado")
 
@@ -65,7 +73,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 supportFragmentManager
             )
             R.id.nav_logout ->{
-                user = null
+                loginViewModel.logout()
                 val intent = Intent(this, LoginActivity::class.java)
                 startActivity(intent)
                 finish()
@@ -81,8 +89,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             R.string.drawer_close
         )
         nav_drawer.setNavigationItemSelectedListener(this)
-        nav_drawer.getHeaderView(0).name.text = user?.username
-        nav_drawer.getHeaderView(0).email.text = user?.email
+//        nav_drawer.getHeaderView(0).name.text = user?.username
+        nav_drawer.getHeaderView(0).email.text = intent.getStringExtra(EXTRA_EMAIL)
         drawer.addDrawerListener(toggle)
         toggle.syncState()
     }

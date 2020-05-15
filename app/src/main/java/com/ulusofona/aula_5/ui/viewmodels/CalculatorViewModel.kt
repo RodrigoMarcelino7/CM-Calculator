@@ -1,39 +1,36 @@
 package com.ulusofona.aula_5.ui.viewmodels
 
 import android.app.Application
+import android.content.Context
 import androidx.lifecycle.AndroidViewModel
-import com.ulusofona.aula_5.data.local.list.ListStorage
+import com.ulusofona.aula_5.data.remote.RetrofitBuilder
+import com.ulusofona.aula_5.data.repositories.OperationRepository
+import com.ulusofona.aula_5.data.local.room.CalculatorDatabase
 import com.ulusofona.aula_5.domain.calculator.CalculatorLogic
 import com.ulusofona.aula_5.ui.listeners.OnDisplayChanged
 import com.ulusofona.aula_5.ui.listeners.OnHistoryChanged
 
 class CalculatorViewModel (application: Application) : AndroidViewModel(application) {
 
-    private val storage = ListStorage.getInstance()
-
-    private val calculatorLogic = CalculatorLogic(storage)
-
-    private val history = calculatorLogic.getAll()
+    private val calculatorLogic = CalculatorLogic(OperationRepository(CalculatorDatabase.getInstance(application).operatioDao(), RetrofitBuilder.getInstance(ENDPOINT)))
 
     var display: String = "0"
 
     private var displayListener: OnDisplayChanged? = null
 
-    private var historyListener: OnHistoryChanged? = null
-
     private fun notifyOnDisplayChanged() {
         displayListener?.onDisplayChanged(display)
     }
 
-    fun registerListener(displayListener: OnDisplayChanged/*, historyListener: OnHistoryChanged*/) {
+    fun registerListener(displayListener: OnDisplayChanged, historyListener: OnHistoryChanged, context: Context) {
         this.displayListener = displayListener
-        //this.historyListener = historyListener
         displayListener.onDisplayChanged(display)
-        //historyListener.onStorageChanged(history)
+        calculatorLogic.registerListener(historyListener,context)
     }
 
     fun unregisterListener() {
         displayListener = null
+        calculatorLogic.unregisterListener()
     }
 
     fun onClickSymbol(symbol: String) {
@@ -41,8 +38,8 @@ class CalculatorViewModel (application: Application) : AndroidViewModel(applicat
         notifyOnDisplayChanged()
     }
 
-    fun onClickEquals() {
-        display = calculatorLogic.performOperation(display).toString()
+    fun onClickEquals(context: Context) {
+        display = calculatorLogic.performOperation(display, context).toString()
         notifyOnDisplayChanged()
     }
 
@@ -55,4 +52,5 @@ class CalculatorViewModel (application: Application) : AndroidViewModel(applicat
         display = if (display.length > 1) display.substring(0, display.length - 1) else "0"
         notifyOnDisplayChanged()
     }
+
 }

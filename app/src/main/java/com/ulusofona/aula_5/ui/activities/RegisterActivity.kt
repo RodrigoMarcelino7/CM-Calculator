@@ -20,18 +20,9 @@ class RegisterActivity : AppCompatActivity() {
     }
 
     @OnClick(R.id.button_register)
-    fun onClickConfirm(view: View){
-        if(users[username.text.toString()] == null && password.text.toString() == password_confirm.text.toString()){
-            users[username.text.toString()] =
-                User(
-                    username.text.toString(),
-                    DigestUtils.sha256Hex(password.text.toString()),
-                    email.text.toString()
-                )
-            user = users[username.text.toString()]
-            val intent = Intent(this, MainActivity::class.java)
-            startActivity(intent)
-            finish()
-        }
+    fun onClickConfirm(view: View) {
+        val intent = Intent(this, MainActivity::class.java)
+        startActivity(intent)
+        finish()
     }
 }
