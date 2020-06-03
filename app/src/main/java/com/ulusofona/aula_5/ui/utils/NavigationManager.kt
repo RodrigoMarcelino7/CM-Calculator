@@ -5,6 +5,7 @@ import androidx.fragment.app.FragmentManager
 import com.ulusofona.aula_5.R
 import com.ulusofona.aula_5.ui.fragments.CalculatorFragment
 import com.ulusofona.aula_5.ui.fragments.HistoricFragment
+import com.ulusofona.aula_5.ui.fragments.MapsFragment
 
 abstract class NavigationManager {
 
@@ -28,6 +29,13 @@ abstract class NavigationManager {
             placeFragment(
                 fm,
                 HistoricFragment()
+            )
+        }
+
+        fun goToMapFragment(fm: FragmentManager){
+            placeFragment(
+                fm,
+                MapsFragment()
             )
         }
 

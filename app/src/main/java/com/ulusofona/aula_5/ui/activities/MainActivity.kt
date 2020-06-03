@@ -60,7 +60,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        outState.run { putString(VISOR_KEY, text_visor.text.toString()) }
+//        outState.run { putString(VISOR_KEY, text_visor.text.toString()) }
         super.onSaveInstanceState(outState)
     }
 
@@ -70,6 +70,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 supportFragmentManager
             )
             R.id.nav_history -> NavigationManager.goToHistoricFragment(
+                supportFragmentManager
+            )
+            R.id.nav_maps -> NavigationManager.goToMapFragment(
                 supportFragmentManager
             )
             R.id.nav_logout ->{
